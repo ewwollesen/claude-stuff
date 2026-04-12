@@ -1,6 +1,6 @@
 # Mattermost CLAUDE.md Dotfiles
 
-This repo is the single source of truth for `CLAUDE.md` files used across a set of Mattermost reference repositories. Each subdirectory contains a `CLAUDE.md` that gets symlinked into the corresponding repo in `~/Repositories/Claude-Repos/`.
+This repo is the single source of truth for `CLAUDE.md` files, slash commands, and skills used across Mattermost projects. Each subdirectory contains files that get symlinked into the corresponding target directory.
 
 ## What are these files?
 
@@ -26,8 +26,18 @@ dotfiles/
 ├── Mattermost-Mobile/CLAUDE.md         # React Native iOS/Android app
 ├── Mattermost-Plugin-Agents/CLAUDE.md  # AI/LLM integration plugin
 ├── Mattermost-Plugin-Boards/CLAUDE.md  # Kanban boards plugin (Focalboard)
-└── Mattermost-Plugin-Playbooks/CLAUDE.md # Incident management plugin
+├── Mattermost-Plugin-Playbooks/CLAUDE.md # Incident management plugin
+└── Tickets/                              # Support ticket analysis workspace
+    ├── CLAUDE.md                         # Ticket investigation guide
+    ├── commands/                         # Slash commands
+    │   ├── mm_ticket_command.md          # /mm_ticket_command — ticket investigation
+    │   ├── mm_eir_command.md             # /mm_eir_command — engineering incident report
+    │   └── mm_rca_command.md             # /mm_rca_command — customer-facing RCA
+    └── skills/
+        └── upgrade-advisor/SKILL.md      # /upgrade-advisor — patch upgrade analysis
 ```
+
+### Code reference repos
 
 Each subdirectory maps to a repo in `~/Repositories/Claude-Repos/`:
 
@@ -86,6 +96,16 @@ git update-index --skip-worktree CLAUDE.md
    cd ~/Repositories/Claude-Repos/{RepoDir} && git update-index --skip-worktree CLAUDE.md
    ```
 
+## Tickets workspace
+
+The `Tickets/` subdirectory manages the Claude Code configuration for the support ticket analysis workspace at `~/Downloads/Tickets/`. Files are symlinked into their expected locations:
+
+| Source (dotfiles) | Target |
+|---|---|
+| `Tickets/CLAUDE.md` | `~/Downloads/Tickets/CLAUDE.md` |
+| `Tickets/commands/*.md` | `~/Downloads/Tickets/.claude/commands/*.md` |
+| `Tickets/skills/upgrade-advisor/SKILL.md` | `~/Downloads/Tickets/.claude/skills/upgrade-advisor/SKILL.md` |
+
 ## Editing guides
 
-Edit the files in **this repo** — the symlinks ensure changes are immediately reflected in the target repos. Do not edit `CLAUDE.md` directly in the target repos.
+Edit the files in **this repo** — the symlinks ensure changes are immediately reflected in the target locations. Do not edit files directly in the target repos or directories.
