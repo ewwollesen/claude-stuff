@@ -19,8 +19,8 @@ The target repos are **read-only reference copies** — they exist for code sear
 dotfiles/
 ├── CLAUDE.md                           # Top-level guide (for this repo itself)
 ├── README.md                           # This file
-├── mattermost/CLAUDE.md                # Mattermost server monorepo (Go/React)
-├── mattermost-enterprise/CLAUDE.md     # Enterprise features (LDAP, SAML, clustering, etc.)
+├── Mattermost/CLAUDE.md                # Mattermost server monorepo (Go/React)
+├── Mattermost-Enterprise/CLAUDE.md     # Enterprise features (LDAP, SAML, clustering, etc.)
 ├── Desktop/CLAUDE.md                   # Electron desktop app
 ├── Mattemrost-Plugin-Calls/CLAUDE.md   # WebRTC voice/video/screensharing plugin
 ├── Mattermost-Mobile/CLAUDE.md         # React Native iOS/Android app
@@ -33,8 +33,8 @@ Each subdirectory maps to a repo in `~/Repositories/Claude-Repos/`:
 
 | Dotfiles Subdir | Target Repo | Description |
 |---|---|---|
-| `mattermost/` | `Claude-Repos/Mattermost/` | Go/React monorepo — server, webapp, mmctl, API |
-| `mattermost-enterprise/` | `Claude-Repos/Enterprise/` | Enterprise features — LDAP, SAML, clustering, compliance |
+| `Mattermost/` | `Claude-Repos/Mattermost/` | Go/React monorepo — server, webapp, mmctl, API |
+| `Mattermost-Enterprise/` | `Claude-Repos/Enterprise/` | Enterprise features — LDAP, SAML, clustering, compliance |
 | `Desktop/` | `Claude-Repos/Desktop/` | Electron desktop app — multi-server, notifications, certificates |
 | `Mattemrost-Plugin-Calls/` | `Claude-Repos/Mattemrost-Plugin-Calls/` | WebRTC plugin — voice/video calls, recording, transcription |
 | `Mattermost-Mobile/` | `Claude-Repos/Mattermost-Mobile/` | React Native app — WatermelonDB, dual database, products |

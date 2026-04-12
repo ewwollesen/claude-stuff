@@ -14,8 +14,8 @@ These repos are **read-only reference copies** used for code search and support/
 
 | Dotfiles Subdir | Target Repo | Description |
 |---|---|---|
-| `mattermost/` | `~/Repositories/Claude-Repos/Mattermost/` | Go/React monorepo — server, webapp, mmctl, API |
-| `mattermost-enterprise/` | `~/Repositories/Claude-Repos/Enterprise/` | Enterprise features — LDAP, SAML, clustering, compliance, data retention |
+| `Mattermost/` | `~/Repositories/Claude-Repos/Mattermost/` | Go/React monorepo — server, webapp, mmctl, API |
+| `Mattermost-Enterprise/` | `~/Repositories/Claude-Repos/Enterprise/` | Enterprise features — LDAP, SAML, clustering, compliance, data retention |
 | `Desktop/` | `~/Repositories/Claude-Repos/Desktop/` | Electron desktop app — multi-server, notifications, certificates |
 | `Mattemrost-Plugin-Calls/` | `~/Repositories/Claude-Repos/Mattemrost-Plugin-Calls/` | WebRTC plugin — voice/video calls, screensharing, recording, transcription |
 | `Mattermost-Mobile/` | `~/Repositories/Claude-Repos/Mattermost-Mobile/` | React Native iOS/Android app — WatermelonDB, dual database, products |
@@ -39,7 +39,7 @@ For repos where `CLAUDE.md` IS tracked upstream (Desktop, Mobile, Agents), the s
 
 Most support issues span multiple repos. Common patterns:
 
-- **Enterprise feature not working**: Check license in `mattermost/` (`server/public/model/license.go`), config in `mattermost/` (`server/public/model/config.go`), implementation in `mattermost-enterprise/`
-- **Plugin issue**: Check plugin code in its repo, then trace the plugin API call back to `mattermost/` (`server/public/plugin/api.go`)
-- **Mobile/Desktop issue**: Check client code in the respective repo, then trace the API call or WebSocket event back to `mattermost/`
-- **Error message lookup**: Find the translation ID in `mattermost/` (`server/i18n/en.json`), then grep for where it's raised
+- **Enterprise feature not working**: Check license in `Mattermost/` (`server/public/model/license.go`), config in `Mattermost/` (`server/public/model/config.go`), implementation in `Mattermost-Enterprise/`
+- **Plugin issue**: Check plugin code in its repo, then trace the plugin API call back to `Mattermost/` (`server/public/plugin/api.go`)
+- **Mobile/Desktop issue**: Check client code in the respective repo, then trace the API call or WebSocket event back to `Mattermost/`
+- **Error message lookup**: Find the translation ID in `Mattermost/` (`server/i18n/en.json`), then grep for where it's raised
