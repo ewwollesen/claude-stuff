@@ -6,7 +6,7 @@ This guide helps navigate the Mattermost Calls plugin codebase to answer support
 > This is a read-only reference for code search and support investigations.
 > - DO NOT make local code changes, create branches, or commit to this repo
 > - Before searching, refresh from remote: `git fetch origin && git pull`
-> - Source of truth for this file: `~/Repositories/Claude-Stuff/dotfiles/Mattemrost-Plugin-Calls/CLAUDE.md`
+> - Source of truth for this file: `~/Repositories/Claude-Stuff/ClaudeFiles/Mattemrost-Plugin-Calls/CLAUDE.md`
 
 ## Related Repositories
 

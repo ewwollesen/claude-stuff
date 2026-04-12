@@ -6,7 +6,7 @@ This guide helps navigate the Mattermost Playbooks plugin codebase to answer sup
 > This is a read-only reference for code search and support investigations.
 > - DO NOT make local code changes, create branches, or commit to this repo
 > - Before searching, refresh from remote: `git fetch origin && git pull`
-> - Source of truth for this file: `~/Repositories/Claude-Stuff/dotfiles/Mattermost-Plugin-Playbooks/CLAUDE.md`
+> - Source of truth for this file: `~/Repositories/Claude-Stuff/ClaudeFiles/Mattermost-Plugin-Playbooks/CLAUDE.md`
 
 ## Related Repositories
 

@@ -1,6 +1,6 @@
-# Mattermost CLAUDE.md Dotfiles
+# Mattermost Claude Code Config
 
-This repo is the single source of truth for `CLAUDE.md` files, slash commands, and skills used across Mattermost projects. Each subdirectory contains files that get symlinked into the corresponding target directory.
+This repo is the single source of truth for `CLAUDE.md` files, slash commands, and skills used across Mattermost projects. Files are symlinked into their target directories.
 
 ## What are these files?
 
@@ -16,32 +16,33 @@ The target repos are **read-only reference copies** — they exist for code sear
 ## Directory Layout
 
 ```
-dotfiles/
-├── CLAUDE.md                           # Top-level guide (for this repo itself)
-├── README.md                           # This file
-├── Mattermost/CLAUDE.md                # Mattermost server monorepo (Go/React)
-├── Mattermost-Enterprise/CLAUDE.md     # Enterprise features (LDAP, SAML, clustering, etc.)
-├── Desktop/CLAUDE.md                   # Electron desktop app
-├── Mattemrost-Plugin-Calls/CLAUDE.md   # WebRTC voice/video/screensharing plugin
-├── Mattermost-Mobile/CLAUDE.md         # React Native iOS/Android app
-├── Mattermost-Plugin-Agents/CLAUDE.md  # AI/LLM integration plugin
-├── Mattermost-Plugin-Boards/CLAUDE.md  # Kanban boards plugin (Focalboard)
-├── Mattermost-Plugin-Playbooks/CLAUDE.md # Incident management plugin
-└── Tickets/                              # Support ticket analysis workspace
-    ├── CLAUDE.md                         # Ticket investigation guide
-    ├── commands/                         # Slash commands
-    │   ├── mm_ticket_command.md          # /mm_ticket_command — ticket investigation
-    │   ├── mm_eir_command.md             # /mm_eir_command — engineering incident report
-    │   └── mm_rca_command.md             # /mm_rca_command — customer-facing RCA
+Claude-Stuff/
+├── README.md                                   # This file
+├── ClaudeFiles/                                # CLAUDE.md files for reference repos
+│   ├── CLAUDE.md                               # Guide for this directory itself
+│   ├── Mattermost/CLAUDE.md                    # Mattermost server monorepo (Go/React)
+│   ├── Mattermost-Enterprise/CLAUDE.md         # Enterprise features (LDAP, SAML, clustering, etc.)
+│   ├── Desktop/CLAUDE.md                       # Electron desktop app
+│   ├── Mattemrost-Plugin-Calls/CLAUDE.md       # WebRTC voice/video/screensharing plugin
+│   ├── Mattermost-Mobile/CLAUDE.md             # React Native iOS/Android app
+│   ├── Mattermost-Plugin-Agents/CLAUDE.md      # AI/LLM integration plugin
+│   ├── Mattermost-Plugin-Boards/CLAUDE.md      # Kanban boards plugin (Focalboard)
+│   └── Mattermost-Plugin-Playbooks/CLAUDE.md   # Incident management plugin
+└── Tickets/                                    # Support ticket analysis workspace
+    ├── CLAUDE.md                               # Ticket investigation guide
+    ├── commands/                               # Slash commands
+    │   ├── mm_ticket_command.md                # /mm_ticket_command — ticket investigation
+    │   ├── mm_eir_command.md                   # /mm_eir_command — engineering incident report
+    │   └── mm_rca_command.md                   # /mm_rca_command — customer-facing RCA
     └── skills/
-        └── upgrade-advisor/SKILL.md      # /upgrade-advisor — patch upgrade analysis
+        └── upgrade-advisor/SKILL.md            # /upgrade-advisor — patch upgrade analysis
 ```
 
 ### Code reference repos
 
-Each subdirectory maps to a repo in `~/Repositories/Claude-Repos/`:
+Each `ClaudeFiles/` subdirectory maps to a repo in `~/Repositories/Claude-Repos/`:
 
-| Dotfiles Subdir | Target Repo | Description |
+| ClaudeFiles Subdir | Target Repo | Description |
 |---|---|---|
 | `Mattermost/` | `Claude-Repos/Mattermost/` | Go/React monorepo — server, webapp, mmctl, API |
 | `Mattermost-Enterprise/` | `Claude-Repos/Enterprise/` | Enterprise features — LDAP, SAML, clustering, compliance |
@@ -57,7 +58,7 @@ Each subdirectory maps to a repo in `~/Repositories/Claude-Repos/`:
 Each `CLAUDE.md` is symlinked from this repo into the target repo root so that Claude Code picks it up automatically:
 
 ```bash
-ln -sf ~/Repositories/Claude-Stuff/dotfiles/{SubDir}/CLAUDE.md ~/Repositories/Claude-Repos/{RepoDir}/CLAUDE.md
+ln -sf ~/Repositories/Claude-Stuff/ClaudeFiles/{SubDir}/CLAUDE.md ~/Repositories/Claude-Repos/{RepoDir}/CLAUDE.md
 ```
 
 To keep the symlinks invisible to git in the target repos, two strategies are used depending on whether the upstream repo already tracks a `CLAUDE.md`:
@@ -81,11 +82,11 @@ git update-index --skip-worktree CLAUDE.md
 
 ## Setting up a new repo
 
-1. Create a subdirectory here with a `CLAUDE.md` following the existing pattern
+1. Create a subdirectory in `ClaudeFiles/` with a `CLAUDE.md` following the existing pattern
 2. Clone the repo into `~/Repositories/Claude-Repos/`
 3. Create the symlink:
    ```bash
-   ln -sf ~/Repositories/Claude-Stuff/dotfiles/{SubDir}/CLAUDE.md ~/Repositories/Claude-Repos/{RepoDir}/CLAUDE.md
+   ln -sf ~/Repositories/Claude-Stuff/ClaudeFiles/{SubDir}/CLAUDE.md ~/Repositories/Claude-Repos/{RepoDir}/CLAUDE.md
    ```
 4. If `CLAUDE.md` is **not** tracked upstream, add it to `.git/info/exclude`:
    ```bash
@@ -98,9 +99,9 @@ git update-index --skip-worktree CLAUDE.md
 
 ## Tickets workspace
 
-The `Tickets/` subdirectory manages the Claude Code configuration for the support ticket analysis workspace at `~/Downloads/Tickets/`. Files are symlinked into their expected locations:
+The `Tickets/` directory manages the Claude Code configuration for the support ticket analysis workspace at `~/Downloads/Tickets/`. Files are symlinked into their expected locations:
 
-| Source (dotfiles) | Target |
+| Source | Target |
 |---|---|
 | `Tickets/CLAUDE.md` | `~/Downloads/Tickets/CLAUDE.md` |
 | `Tickets/commands/*.md` | `~/Downloads/Tickets/.claude/commands/*.md` |

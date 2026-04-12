@@ -6,7 +6,7 @@ This guide helps navigate the Mattermost Enterprise repo to answer support quest
 > This is a read-only reference for code search and support investigations.
 > - DO NOT make local code changes, create branches, or commit to this repo
 > - Before searching, refresh from remote: `git fetch origin && git pull`
-> - Source of truth for this file: `~/Repositories/Claude-Stuff/dotfiles/Mattermost-Enterprise/CLAUDE.md`
+> - Source of truth for this file: `~/Repositories/Claude-Stuff/ClaudeFiles/Mattermost-Enterprise/CLAUDE.md`
 
 ## Related Repository
 

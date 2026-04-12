@@ -1,4 +1,4 @@
-# Mattermost CLAUDE.md Dotfiles
+# Mattermost CLAUDE.md ClaudeFiles
 
 This repo manages `CLAUDE.md` files for a set of Mattermost reference repositories in `~/Repositories/Claude-Repos/`. Each subdirectory here corresponds to a repo, and its `CLAUDE.md` is symlinked into the target repo root.
 
@@ -12,7 +12,7 @@ These repos are **read-only reference copies** used for code search and support/
 
 ## Repository Mapping
 
-| Dotfiles Subdir | Target Repo | Description |
+| ClaudeFiles Subdir | Target Repo | Description |
 |---|---|---|
 | `Mattermost/` | `~/Repositories/Claude-Repos/Mattermost/` | Go/React monorepo — server, webapp, mmctl, API |
 | `Mattermost-Enterprise/` | `~/Repositories/Claude-Repos/Enterprise/` | Enterprise features — LDAP, SAML, clustering, compliance, data retention |
@@ -28,7 +28,7 @@ These repos are **read-only reference copies** used for code search and support/
 Each `CLAUDE.md` is symlinked from this repo into the target:
 
 ```bash
-ln -sf ~/Repositories/Claude-Stuff/dotfiles/{SubDir}/CLAUDE.md ~/Repositories/Claude-Repos/{RepoDir}/CLAUDE.md
+ln -sf ~/Repositories/Claude-Stuff/ClaudeFiles/{SubDir}/CLAUDE.md ~/Repositories/Claude-Repos/{RepoDir}/CLAUDE.md
 ```
 
 For repos where `CLAUDE.md` is NOT tracked upstream (Mattermost, Enterprise, Calls, Boards, Playbooks), the symlink is hidden from git via `.git/info/exclude`.

@@ -6,7 +6,7 @@ This guide helps navigate the Mattermost codebase to answer support questions: f
 > This is a read-only reference for code search and support investigations.
 > - DO NOT make local code changes, create branches, or commit to this repo
 > - Before searching, refresh from remote: `git fetch origin && git pull`
-> - Source of truth for this file: `~/Repositories/Claude-Stuff/dotfiles/Mattermost/CLAUDE.md`
+> - Source of truth for this file: `~/Repositories/Claude-Stuff/ClaudeFiles/Mattermost/CLAUDE.md`
 
 ## Related Repository
 
