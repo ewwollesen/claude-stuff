@@ -197,3 +197,83 @@ useful follow-ups:
 
 Do not ask for everything at once. Ask for the single most likely next piece
 of evidence.
+
+---
+
+## Knowledge Base (KB)
+
+A machine-readable KB lives at `~/Downloads/Tickets/kb/`. It captures reusable
+patterns extracted from resolved tickets — error signatures, root causes,
+ruled-out theories, fixes, and code references.
+
+```
+kb/
+├── index.md          ← compact lookup table (error signature → root cause → article link)
+└── articles/
+    └── <slug>.md     ← detail pages for complex patterns
+```
+
+The KB is **passively maintained only** — it is not consulted during triage.
+When the corpus is large enough, we will evaluate whether to integrate it into
+the triage workflow.
+
+### Step 6 — KB ingest (after resolution)
+
+When a ticket reaches resolution (root cause confirmed, fix verified or
+recommended):
+
+1. Read `~/Downloads/Tickets/kb/index.md`
+2. Does the root cause pattern already have an entry?
+   - **Yes:** Update the existing entry and/or article — add the ticket number,
+     any new error signature variants, new ruled-out theories, updated version
+     info or deployment context.
+   - **No, reusable pattern:** Add a new index entry. Create an article in
+     `kb/articles/` if the pattern needs depth (ruled-out theories, multi-step
+     root cause, code references). Skip the article if the one-line index
+     summary is sufficient.
+   - **No, one-off:** Skip KB ingest. The ticket's `analysis.md` remains the
+     sole record.
+3. Update the index header metadata (entry count, last-updated date).
+4. Do NOT delete or modify the ticket's `analysis.md` — the KB distills it,
+   does not replace it.
+
+**What qualifies as a reusable pattern (create an entry):**
+- Bug in Mattermost code (will recur until fixed)
+- Common misconfiguration (multiple customers will hit it)
+- Misleading error message (the diagnostic path is reusable)
+
+**What is a one-off (skip):**
+- Purely customer-specific environment issue with no reusable diagnostic path
+
+### index.md format
+
+Each entry is one record. Format:
+
+```
+`error signature(s)` | root cause summary | article link or "no article" | ticket number(s)
+```
+
+### Article template
+
+```markdown
+# <Descriptive Title>
+<!-- Tickets: XXXXX, YYYYY -->
+
+## Error Signatures
+- `exact log string`
+
+## Root Cause
+What's happening + code path.
+
+## Fix
+Customer action + product fix ref.
+
+## Ruled Out
+What was eliminated and why.
+
+## Deployment Context
+HA/single/air-gapped. Versions. Triggers.
+
+## Code References
+- `server/path/file.go:NN` — function
+```
