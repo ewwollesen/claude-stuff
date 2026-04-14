@@ -108,7 +108,7 @@ With a working hypothesis formed from evidence (not assumption):
    reference repos in `~/Repositories/Claude-Repos/`:
    - `~/Repositories/Claude-Repos/Mattermost` — server, webapp, mmctl, API
    - `~/Repositories/Claude-Repos/Enterprise` — enterprise features (LDAP, SAML, clustering, etc.)
-   - `~/Repositories/Claude-Repos/Mattemrost-Plugin-Calls` — Calls plugin
+   - `~/Repositories/Claude-Repos/Mattermost-Plugin-Calls` — Calls plugin
    - `~/Repositories/Claude-Repos/Mattermost-Plugin-Agents` — AI/LLM plugin
    - `~/Repositories/Claude-Repos/Mattermost-Plugin-Boards` — Boards plugin
    - `~/Repositories/Claude-Repos/Mattermost-Plugin-Playbooks` — Playbooks plugin

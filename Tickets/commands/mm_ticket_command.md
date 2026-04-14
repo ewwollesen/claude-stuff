@@ -3,11 +3,6 @@ Begin a Mattermost support ticket investigation for the ticket in the current di
 The ticket directory is the current working directory. All artifacts (logs,
 config, analysis.md, etc.) are expected to be here or in subdirectories.
 
-**Do not add comments to inline code.** When you write bash one-liners,
-inline Python scripts, or any throwaway code in tool calls, omit all comments.
-These snippets are ephemeral and only executed by you — comments add noise and
-trigger unnecessary permission prompts.
-
 **First**, rename the session using `/rename` to include the ticket number and
 customer name (derived from the directory name or artifacts). For example:
 `/rename Ticket 12345 — Acme Corp`
