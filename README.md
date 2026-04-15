@@ -27,7 +27,8 @@ Claude-Stuff/
 │   ├── Mattermost-Mobile/CLAUDE.md             # React Native iOS/Android app
 │   ├── Mattermost-Plugin-Agents/CLAUDE.md      # AI/LLM integration plugin
 │   ├── Mattermost-Plugin-Boards/CLAUDE.md      # Kanban boards plugin (Focalboard)
-│   └── Mattermost-Plugin-Playbooks/CLAUDE.md   # Incident management plugin
+│   ├── Mattermost-Plugin-Playbooks/CLAUDE.md   # Incident management plugin
+│   └── Mattermost-Operator/CLAUDE.md           # Kubernetes operator
 └── Tickets/                                    # Support ticket analysis workspace
     ├── CLAUDE.md                               # Ticket investigation guide
     ├── commands/                               # Slash commands
@@ -53,6 +54,7 @@ Each `ClaudeFiles/` subdirectory maps to a repo in `~/Repositories/Claude-Repos/
 | `Mattermost-Plugin-Agents/` | `Claude-Repos/Mattermost-Plugin-Agents/` | AI/LLM plugin — multi-provider, MCP, embeddings |
 | `Mattermost-Plugin-Boards/` | `Claude-Repos/Mattermost-Plugin-Boards/` | Kanban boards — boards, blocks, cards, templates |
 | `Mattermost-Plugin-Playbooks/` | `Claude-Repos/Mattermost-Plugin-Playbooks/` | Incident management — playbooks, runs, checklists |
+| `Mattermost-Operator/` | `Claude-Repos/Mattermost-Operator/` | Kubernetes operator — CRDs, controllers, deployment sizing |
 
 ## How symlinks work
 
@@ -66,7 +68,7 @@ To keep the symlinks invisible to git in the target repos, two strategies are us
 
 ### Repos where `CLAUDE.md` is NOT tracked upstream
 
-Mattermost, Enterprise, Calls, Boards, Playbooks — the symlink is an untracked file, so it just needs to be excluded:
+Mattermost, Enterprise, Calls, Boards, Playbooks, Operator — the symlink is an untracked file, so it just needs to be excluded:
 
 ```
 # In each repo's .git/info/exclude:
