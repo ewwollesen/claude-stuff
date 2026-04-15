@@ -33,7 +33,8 @@ Claude-Stuff/
     ├── commands/                               # Slash commands
     │   ├── mm_ticket_command.md                # /mm_ticket_command — ticket investigation
     │   ├── mm_eir_command.md                   # /mm_eir_command — engineering incident report
-    │   └── mm_rca_command.md                   # /mm_rca_command — customer-facing RCA
+    │   ├── mm_rca_command.md                   # /mm_rca_command — customer-facing RCA
+    │   └── mm_retro_command.md                 # /mm_retro_command — post-resolution retrospective + KB ingest
     └── skills/
         └── upgrade-advisor/SKILL.md            # /upgrade-advisor — patch upgrade analysis
 ```
