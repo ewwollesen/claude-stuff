@@ -358,4 +358,55 @@ Use the **first** PR number from the commit subject (the original PR, not the ch
 If a section has no entries, omit that section entirely — but always include **Security Fixes** (even if the count is 0, the table still documents the absence) and always include the final **Summary**.
 
 ### Before writing the report — self-check
-Open `~/Downloads/Tickets/50987-testing/uprade_recommendation_ideal.md` and skim it. Your output's section names, header layout, bullet structure, italic/bold markers, and summary placement must match that file's pattern exactly. If any differ, fix them before returning.
+Compare your output against the reference example below. Your section names, header layout, bullet structure, italic/bold markers, and summary placement must match this pattern exactly. If any differ, fix them before returning.
+
+### Reference example (the canonical format)
+
+````markdown
+# Upgrade Recommendation: 10.11.8 → 10.11.13
+
+**Instance:** [https://mattermost.veevadev.com](https://mattermost.veevadev.com/) **Current Version:** 10.11.8 (released November 21, 2025) **Recommended Version:** 10.11.13 (released March 16, 2026)
+
+## Security Fixes
+
+Patch releases 10.11.9 through 10.11.13 collectively include **~30 security fixes** ranging from **low to high severity**. Per Mattermost's [responsible disclosure policy](https://mattermost.com/security-updates/), specific vulnerability details are not included here.
+
+| Patch    | Severity Range | Approx. Count |
+| -------- | -------------- | ------------- |
+| 10.11.9  | Low to Medium  | 0             |
+| 10.11.10 | Low to Medium  | 5             |
+| 10.11.11 | Low to High    | 18            |
+| 10.11.12 | Low to High    | 6             |
+| 10.11.13 | Low to Medium  | 2             |
+
+For full details on disclosed vulnerabilities (including CVE and MMSA identifiers), see: [https://mattermost.com/security-updates/](https://mattermost.com/security-updates/)
+
+## Upgrade urgently — could cause outage or degradation
+
+These fixes address server crashes or significant functional breakage.
+
+- **Server panic when bot posts trigger persistent notifications** (MM-65575, Jira priority: High) — _Introduced in 10.11.10_ Fixed a server crash that occurred when a bot posted in a channel where persistent notifications were configured. The panic causes the server to crash every ~5 minutes until the post is acknowledged. Your instance has persistent notifications enabled (`AllowPersistentNotifications: true`), making this directly relevant. PR: [#34174](https://github.com/mattermost/mattermost/pull/34174)
+- **Plugin config wiped on re-enablement** — _Introduced in 10.11.13_ Re-enabling a plugin would lose its custom configuration, reverting to defaults. With your many active plugins (Jira, GitHub, GitLab, Confluence, Zoom, etc.), toggling a plugin off and back on would silently wipe its settings and break integrations. PR: [#35545](https://github.com/mattermost/mattermost/pull/35545)
+
+## Quality of life — could be annoying for a subset of users
+
+These are functional improvements and minor bug fixes.
+
+- **Postgres full-text search performance regression reverted** (MM-66782, Jira priority: Medium) — _Introduced in 10.11.11_ Reverted a prior change that caused Postgres full-text search queries (e.g. "Recent mentions") to time out and return empty results. Your instance uses Elasticsearch with `DisableDatabaseSearch: true`, so this is low relevance unless database search is re-enabled. PR: [#35063](https://github.com/mattermost/mattermost/pull/35063)
+- **Login flow fix for SSO-only environments** — _Introduced in 10.11.10_ When email and username sign-in are both disabled (as in your environment), the server no longer attempts an unnecessary username/email lookup before falling through to SAML. Eliminates a needless error path during login. PR: [#34441](https://github.com/mattermost/mattermost/pull/34441)
+- **Channel settings modal URL regression** (MM-64725, Jira priority: Medium) — _Introduced in 10.11.11_ After renaming a channel, search using `in:[channel name]` would show the new display name instead of the original channel handle. Regression since v10.8. PR: [#33500](https://github.com/mattermost/mattermost/pull/33500)
+- **Keyboard focus wrong when using Shift-Up to reply in thread** (MM-65186, Jira priority: High) — _Introduced in 10.11.9_ When pressing Shift+Up to reply in a thread, keyboard focus stayed in the main compose box instead of moving to the thread reply panel. PR: [#34627](https://github.com/mattermost/mattermost/pull/34627)
+- **Group member pagination fix** — _Introduced in 10.11.12_ Group member lists were loaded all at once instead of being paginated, which could cause performance issues for large groups. PR: [#35172](https://github.com/mattermost/mattermost/pull/35172)
+- **Reduced unnecessary rerenders on shared channels tooltip** — _Introduced in 10.11.9_ Performance improvement that eliminates unnecessary client-side rerenders. PR: [#34336](https://github.com/mattermost/mattermost/pull/34336)
+
+## Plugin Updates
+
+- **Zoom plugin updated to v1.12.0** — _Zoom (currently v1.8.0)_ — _Introduced in 10.11.10 (v1.11.0), 10.11.12 (v1.12.0)_ The bundled Zoom plugin was updated through two releases. Your instance is on v1.8.0, so this upgrade brings four minor versions of fixes and improvements. PR: [#34734](https://github.com/mattermost/mattermost/pull/34734), [#35167](https://github.com/mattermost/mattermost/pull/35167)
+- **Jira plugin updated to v4.5.0** — _Jira (currently v4.4.1)_ — _Introduced in 10.11.10_ The bundled Jira plugin was updated from v4.4.1 to v4.5.0. PR: [#34803](https://github.com/mattermost/mattermost/pull/34803)
+
+> **Note:** Plugin updates listed here only cover pre-packaged plugins that ship with the Mattermost server package. Custom plugins or plugins installed independently from the Mattermost Plugin Marketplace are not included in this analysis.
+
+---
+
+**Summary:** This upgrade from 10.11.8 to 10.11.13 includes approximately 30 security fixes across five patch releases, with severities ranging up to high. The bulk of security fixes landed in 10.11.11. On the stability side, the most urgent fix is a server panic triggered by bots posting in channels with persistent notifications (10.11.10) — which can crash the server every ~5 minutes. The plugin config loss on re-enablement (10.11.13) is also significant given your many active integrations. The remaining bug fixes are minor quality-of-life improvements. Given the volume and severity of the security fixes alone, upgrading is strongly recommended.
+````
