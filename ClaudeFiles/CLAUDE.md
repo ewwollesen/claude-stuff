@@ -17,7 +17,8 @@ These repos are **read-only reference copies** used for code search and support/
 | `Mattermost/` | `~/Repositories/Claude-Repos/Mattermost/` | Go/React monorepo — server, webapp, mmctl, API |
 | `Mattermost-Enterprise/` | `~/Repositories/Claude-Repos/Enterprise/` | Enterprise features — LDAP, SAML, clustering, compliance, data retention |
 | `Desktop/` | `~/Repositories/Claude-Repos/Desktop/` | Electron desktop app — multi-server, notifications, certificates |
-| `Mattemrost-Plugin-Calls/` | `~/Repositories/Claude-Repos/Mattemrost-Plugin-Calls/` | WebRTC plugin — voice/video calls, screensharing, recording, transcription |
+| `Mattermost-Plugin-Calls/` | `~/Repositories/Claude-Repos/Mattermost-Plugin-Calls/` | WebRTC plugin — voice/video calls, screensharing, recording, transcription |
+| `Mattermost-Docs/` | `~/Repositories/Claude-Repos/Mattermost-Docs/` | Sphinx documentation site — docs.mattermost.com source |
 | `Mattermost-Mobile/` | `~/Repositories/Claude-Repos/Mattermost-Mobile/` | React Native iOS/Android app — WatermelonDB, dual database, products |
 | `Mattermost-Plugin-Agents/` | `~/Repositories/Claude-Repos/Mattermost-Plugin-Agents/` | AI/LLM plugin — multi-provider, MCP, embeddings, tool calling |
 | `Mattermost-Plugin-Boards/` | `~/Repositories/Claude-Repos/Mattermost-Plugin-Boards/` | Kanban boards plugin — boards, blocks, cards, templates |

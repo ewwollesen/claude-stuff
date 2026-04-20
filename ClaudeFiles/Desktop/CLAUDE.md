@@ -13,7 +13,7 @@ This guide helps navigate the Mattermost Desktop codebase to answer support ques
 - **Mattermost Server**: `../Mattermost/` — server API, WebSocket events, config model, error translations
 - **Enterprise**: `../Enterprise/` — enterprise features (LDAP, SAML, clustering)
 - **Mobile**: `../Mattermost-Mobile/` — React Native mobile app (shares server API surface)
-- **Plugin-Calls**: `../Mattemrost-Plugin-Calls/` — Calls plugin (desktop has Calls widget integration)
+- **Plugin-Calls**: `../Mattermost-Plugin-Calls/` — Calls plugin (desktop has Calls widget integration)
 
 ## Repository Structure
 

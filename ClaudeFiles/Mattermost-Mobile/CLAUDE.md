@@ -12,7 +12,7 @@ This guide helps navigate the Mattermost Mobile codebase to answer support quest
 
 - **Mattermost Server**: `../Mattermost/` — server API, WebSocket events, config model, error translations
 - **Enterprise**: `../Enterprise/` — enterprise features (LDAP, SAML, Intune MAM)
-- **Plugin-Calls**: `../Mattemrost-Plugin-Calls/` — Calls plugin (mobile has product module: `app/products/calls/`)
+- **Plugin-Calls**: `../Mattermost-Plugin-Calls/` — Calls plugin (mobile has product module: `app/products/calls/`)
 - **Plugin-Agents**: `../Mattermost-Plugin-Agents/` — AI plugin (mobile has product module: `app/products/agents/`)
 - **Plugin-Playbooks**: `../Mattermost-Plugin-Playbooks/` — Playbooks plugin (mobile has product module: `app/products/playbooks/`)
 
