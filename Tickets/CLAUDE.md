@@ -122,6 +122,21 @@ With a working hypothesis formed from evidence (not assumption):
 4. If a config value is suspect, look it up in the codebase — do not assume
    what it does
 
+#### Heuristic: browser-side features
+
+For tickets about features that run in the browser — notifications,
+downloads, clipboard, paste, drag-and-drop, service workers, file uploads,
+permissions prompts — **read the webapp source for that feature before
+concluding "no Mattermost-side fix exists."** Server config is one possible
+knob, not the only one; the webapp's call into the relevant browser API
+(arguments, options, payloads) is also a candidate root cause and is often
+where data-handling bugs live. Specifically check whether each argument the
+webapp passes matches the API's spec — putting message content into a `tag`
+field or a filename, for example, is a class of bug that won't show up in
+any server log or config but is fixable in the webapp in one line. This
+heuristic was added after ticket 51286 closed with a first-pass miss along
+exactly these lines.
+
 ### Step 5 — Update analysis.md
 
 After each investigative session, update (or create) `analysis.md` in the
