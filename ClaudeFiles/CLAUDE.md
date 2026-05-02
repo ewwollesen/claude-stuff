@@ -18,6 +18,7 @@ These repos are **read-only reference copies** used for code search and support/
 | `Mattermost-Enterprise/` | `~/Repositories/Claude-Repos/Enterprise/` | Enterprise features — LDAP, SAML, clustering, compliance, data retention |
 | `Desktop/` | `~/Repositories/Claude-Repos/Desktop/` | Electron desktop app — multi-server, notifications, certificates |
 | `Mattermost-Plugin-Calls/` | `~/Repositories/Claude-Repos/Mattermost-Plugin-Calls/` | WebRTC plugin — voice/video calls, screensharing, recording, transcription |
+| `Mattermost-RTCD/` | `~/Repositories/Claude-Repos/Mattermost-RTCD/` | WebRTC daemon — standalone Go SFU offload service for the Calls plugin |
 | `Mattermost-Docs/` | `~/Repositories/Claude-Repos/Mattermost-Docs/` | Sphinx documentation site — docs.mattermost.com source |
 | `Mattermost-Mobile/` | `~/Repositories/Claude-Repos/Mattermost-Mobile/` | React Native iOS/Android app — WatermelonDB, dual database, products |
 | `Mattermost-Plugin-Agents/` | `~/Repositories/Claude-Repos/Mattermost-Plugin-Agents/` | AI/LLM plugin — multi-provider, MCP, embeddings, tool calling |
@@ -33,7 +34,7 @@ Each `CLAUDE.md` is symlinked from this repo into the target:
 ln -sf ~/Repositories/Claude-Stuff/ClaudeFiles/{SubDir}/CLAUDE.md ~/Repositories/Claude-Repos/{RepoDir}/CLAUDE.md
 ```
 
-For repos where `CLAUDE.md` is NOT tracked upstream (Mattermost, Enterprise, Calls, Boards, Playbooks, Operator), the symlink is hidden from git via `.git/info/exclude`.
+For repos where `CLAUDE.md` is NOT tracked upstream (Mattermost, Enterprise, Calls, Boards, Playbooks, Operator, RTCD), the symlink is hidden from git via `.git/info/exclude`.
 
 For repos where `CLAUDE.md` IS tracked upstream (Desktop, Mobile, Agents), the symlink overrides the upstream file and `git update-index --skip-worktree CLAUDE.md` prevents git from showing it as modified or overwriting it on pull.
 
