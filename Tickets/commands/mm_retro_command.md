@@ -15,11 +15,13 @@ user the ticket doesn't appear to be resolved yet.
 
 Read `analysis.md` and all other artifacts in the ticket directory. If `rca.md`
 or `eir.md` exist, read those too. Then produce a retrospective that covers
-three areas:
+four areas:
 
 1. **Investigation retrospective** — how did the investigation go?
 2. **Follow-up actions** — what needs to happen now?
-3. **KB ingest** — does this pattern belong in the knowledge base?
+3. **KB ingest** — does this pattern belong in the internal knowledge base?
+4. **Public docs & KB review** — should anything change at docs.mattermost.com
+   or in the public support KB?
 
 Write the output to `retro.md` in the current directory. After writing, print
 the full contents to the screen.
@@ -178,6 +180,67 @@ does not replace it.**
 
 ---
 
+## Part 4 — Public docs & KB review
+
+Separate from the internal KB ingest in Part 3, evaluate whether this ticket
+points to changes that should land in customer-facing documentation or the
+public support knowledge base.
+
+### a) docs.mattermost.com
+
+Local mirror: `~/Repositories/Claude-Repos/Mattermost-Docs` (refresh with
+`git fetch origin && git pull` before searching). Public site:
+https://docs.mattermost.com.
+
+Ask:
+- Is there a config setting, behavior, or deployment pattern in this ticket
+  that is undocumented, incorrectly documented, or under-documented?
+- Was the customer's confusion traceable to docs that are ambiguous, stale,
+  or missing a warning/note?
+- Is there an error message or symptom that doesn't appear anywhere in the
+  docs and should?
+
+If yes, propose a specific change: which page, what edit. Grep the docs repo
+to confirm current state before recommending — do not assume a page is
+missing without checking.
+
+### b) Public support KB — new article candidate
+
+Public KB:
+https://support.mattermost.com/hc/en-us/categories/360005481452-Knowledge-Base
+
+Ask:
+- Is the resolution something a customer could self-serve on if they hit it
+  again? (config fix, known limitation, version-specific gotcha)
+- Is the diagnostic path generic enough that other customers would benefit?
+- Would a public article reduce future ticket volume for this pattern?
+
+If yes, draft a proposed title and a 2-3 sentence summary of what the article
+should cover. The actual article goes through the support team's normal
+publishing process — the retro just identifies the candidate.
+
+### c) Public support KB — existing article check
+
+Search the public KB for the error signature, symptom, or feature area.
+
+- If an article already exists: does it match what was actually found in this
+  ticket? Are there missing error variants, missing version coverage, or an
+  out-of-date fix? Propose specific edits.
+- If no article exists: this loops back to (b) — note it as a candidate.
+
+If you cannot access the public KB directly, say so and flag the search terms
+the support team should check manually.
+
+### Skip when
+
+- Issue was a one-off product bug already filed and being fixed (no customer
+  workaround worth documenting)
+- Root cause was customer-environment specific with no transferable guidance
+- Pattern is already well-covered in both docs and KB (note this — it's a
+  positive signal worth recording)
+
+---
+
 ## retro.md format
 
 ```markdown
@@ -226,6 +289,19 @@ does not replace it.**
 
 **Decision:** <added / updated / skipped>
 <!-- If added/updated: what was changed. If skipped: why. -->
+
+---
+
+## Public docs & KB review
+
+### docs.mattermost.com
+<!-- Specific page + proposed edit, or "no changes needed" with brief reason -->
+
+### Public KB — new article candidate
+<!-- Proposed title + 2-3 sentence scope, or "not a candidate" with brief reason -->
+
+### Public KB — existing article
+<!-- Article URL/title found + proposed edits, or "no existing article" / "existing article is accurate" -->
 ```
 
 ---
