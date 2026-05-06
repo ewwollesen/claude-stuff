@@ -82,6 +82,25 @@ independently:
 4. Note any errors that appear only once — these are often the most significant
 5. For HA deployments: note whether errors appear on one node or all nodes
 6. Flag anything that looks anomalous even if it seems minor or unrelated
+7. **Verbatim AppError extraction.** For any line matching `level=error`
+   with `msg="An internal error has occurred"`, or any AppError-formatted
+   string of the shape `<Where>: <Message>`, capture the `<Message>`
+   **exactly** (full punctuation, no paraphrasing, no truncation). Then
+   `grep -F` it against
+   `~/Repositories/Claude-Repos/Mattermost/server/i18n/en.json` to find the
+   matching translation key — that key is the precise grep target for the
+   call site. Refresh the repo first
+   (`cd ~/Repositories/Claude-Repos/Mattermost && git fetch origin && git pull`).
+   - One match → record the key alongside the error in your triage output.
+   - Multiple matches → record all candidates; disambiguate later using the
+     `<Where>` prefix and surrounding context.
+   - Zero matches → that itself is a finding (likely plugin, Enterprise, or
+     version drift); widen the search to those repos before forming
+     hypotheses.
+
+   Do this in triage, before forming hypotheses about what the AppError
+   means — guessing at intent from `<Where>` alone has misled prior
+   investigations.
 
 Present your findings as a structured list. Do not prioritize or theorize yet —
 just report what you see.

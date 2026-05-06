@@ -51,6 +51,32 @@ Capture this in the `Timeline` section of `analysis.md` with concrete
 timestamps, and reference it from the `Correlation` section when explaining
 how triage findings map (or don't) to the reported symptom.
 
+**Extract AppError messages verbatim before theorizing.** Mattermost
+`AppError`s render in logs as `<Where>: <Message>` (often accompanied by
+`msg="An internal error has occurred"`). The `<Message>` is almost always a
+direct copy of a translation key value from
+`~/Repositories/Claude-Repos/Mattermost/server/i18n/en.json`. For each such
+error you flagged in triage:
+
+- Capture the `<Message>` string **exactly** as it appears — full punctuation,
+  no paraphrasing, no truncation.
+- `grep -F` (fixed-string) that message against
+  `~/Repositories/Claude-Repos/Mattermost/server/i18n/en.json` to find the
+  matching translation key(s). Refresh the repo first
+  (`cd ~/Repositories/Claude-Repos/Mattermost && git fetch origin && git pull`).
+- If the message maps to **exactly one** translation key, record the key in
+  `analysis.md` — it is the most precise grep target for finding the call
+  site in the server source.
+- If it maps to **multiple** keys, record all candidates and use the
+  `<Where>` prefix and surrounding log context to disambiguate.
+- If it maps to **zero** keys, that itself is a finding: the error may come
+  from a plugin, Enterprise code, or a different version of the server —
+  widen the search to those repos before forming hypotheses.
+
+Do this *before* forming hypotheses about what the AppError means. The
+verbatim message + translation key is the anchor; guessing at intent from
+`<Where>` alone has misled prior investigations.
+
 Then follow the workflow defined in CLAUDE.md exactly:
 
 0. **Before any analysis**, list every file in the current directory (recursively). Attempt to read or access each artifact. If ANY file cannot be read or parsed (PDFs, images, compressed archives, unknown formats, etc.), STOP IMMEDIATELY and report which files are inaccessible and why. Do not proceed with analysis until all artifacts can be accessed — incomplete input leads to wasted work.
