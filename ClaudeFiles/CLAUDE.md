@@ -23,6 +23,7 @@ These repos are **read-only reference copies** used for code search and support/
 | `Mattermost-Mobile/` | `~/Repositories/Claude-Repos/Mattermost-Mobile/` | React Native iOS/Android app — WatermelonDB, dual database, products |
 | `Mattermost-Plugin-Agents/` | `~/Repositories/Claude-Repos/Mattermost-Plugin-Agents/` | AI/LLM plugin — multi-provider, MCP, embeddings, tool calling |
 | `Mattermost-Plugin-Boards/` | `~/Repositories/Claude-Repos/Mattermost-Plugin-Boards/` | Kanban boards plugin — boards, blocks, cards, templates |
+| `Mattermost-Plugin-Github/` | `~/Repositories/Claude-Repos/Mattermost-Plugin-Github/` | GitHub integration plugin — OAuth, subscriptions, webhooks, permalinks, review-SLA digest, GitHub Enterprise |
 | `Mattermost-Plugin-Gitlab/` | `~/Repositories/Claude-Repos/Mattermost-Plugin-Gitlab/` | GitLab integration plugin — OAuth, subscriptions, webhooks, permalinks |
 | `Mattermost-Plugin-LegalHold/` | `~/Repositories/Claude-Repos/Mattermost-Plugin-LegalHold/` | Legal Hold plugin — Enterprise-only, cluster-scheduled exports, S3 override, HMAC-hashed archives |
 | `Mattermost-Plugin-Playbooks/` | `~/Repositories/Claude-Repos/Mattermost-Plugin-Playbooks/` | Incident management plugin — playbooks, runs, checklists, automation |
@@ -36,7 +37,7 @@ Each `CLAUDE.md` is symlinked from this repo into the target:
 ln -sf ~/Repositories/Claude-Stuff/ClaudeFiles/{SubDir}/CLAUDE.md ~/Repositories/Claude-Repos/{RepoDir}/CLAUDE.md
 ```
 
-For repos where `CLAUDE.md` is NOT tracked upstream (Mattermost, Enterprise, Calls, Boards, Playbooks, Operator, RTCD, Gitlab, LegalHold), the symlink is hidden from git via `.git/info/exclude`.
+For repos where `CLAUDE.md` is NOT tracked upstream (Mattermost, Enterprise, Calls, Boards, Playbooks, Operator, RTCD, Gitlab, LegalHold, Github), the symlink is hidden from git via `.git/info/exclude`.
 
 For repos where `CLAUDE.md` IS tracked upstream (Desktop, Mobile, Agents), the symlink overrides the upstream file and `git update-index --skip-worktree CLAUDE.md` prevents git from showing it as modified or overwriting it on pull.
 
