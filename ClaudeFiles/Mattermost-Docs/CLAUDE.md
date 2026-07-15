@@ -11,7 +11,8 @@ Sphinx-based documentation site published to https://docs.mattermost.com/.
 - `gmake linkcheck` — validate external links
 - `gmake test` — run pytest for extension tests
 - Output lands in `build/html/`; warnings in `build/warnings.log`
-- Run `gmake clean` if builds become slow
+
+**IMPORTANT: Do NOT run any local doc build (`gmake html`, `gmake livehtml`, `gmake clean html`, etc.) unless the user explicitly asks for a build.** Builds are resource-intensive and will crash the user's laptop. When a build is explicitly requested, always run `gmake clean` first before the requested build target.
 
 ## Directory structure
 
