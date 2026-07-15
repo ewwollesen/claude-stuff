@@ -80,3 +80,64 @@ Use `watch_and_sync.sh` for live CSS/JS reloading during theme development.
 - Section labels are auto-generated — avoid duplicate section titles within the same document
 - Use tabs (`sphinx_inline_tabs`) for platform-specific or version-specific instructions
 - Images go in `source/images/` or alongside their doc file
+
+## Documentation style guide
+
+Full guide: https://handbook.mattermost.com/operations/research-and-development/product/technical-writing-team-handbook/documentation-style-guide
+
+### Voice and tone
+- Active voice, present tense, second person ("you"), imperative sentences
+- "Select **Save**" not "The Save button should be clicked"
+
+### Capitalization
+- Page titles and all headings: sentence case (preserve proper nouns and product names)
+- "Deployment guide for organizations" not "Deployment Guide For Organizations"
+
+### RST heading hierarchy
+```
+Page Title        (underline =)
+Section           (underline -)
+Subsection        (underline ~)
+Sub-subsection    (underline ^)
+```
+
+### Inline text formatting
+| Content | Format |
+|---|---|
+| UI elements, clickable controls, field names | Bold: `**Save**` |
+| Commands, code, files, directories, parameter values | Backticks: `` `config.json` `` |
+| Parameter names, citations | Italic: `*parameter*` |
+| Placeholders | Curly braces: `{hostname}.mattermost.com` |
+| Keyboard shortcuts | Plus notation: `CTRL+U` |
+
+### Links (RST)
+- External: `` `Link text <https://example.com>`__ ``
+- Internal page: `` :doc:`Link text </folder/filename>` ``
+- Internal section: `` :ref:`anchor-label` `` (requires `.. _anchor-label:` at target)
+
+### Lists (RST)
+- Bullets: `-` at each level
+- Numbered: `1.` top level, `a.` nested
+
+### Code blocks (RST)
+```
+.. code-block:: bash
+
+   command here
+```
+Supported languages: `go`, `bash`, `javascript`, `html`, `none`
+
+### Key terminology
+| Use | Not |
+|---|---|
+| log in / log into (verb) | login (verb) |
+| login (noun/adjective) | |
+| set up (verb) | setup (verb) |
+| setup (noun/adjective) | |
+| sign in (verb) | sign-in (verb) |
+| they/their (singular) | he/she, his/her |
+
+### Numbers and punctuation
+- Spell out zero through nine; use digits for 10+
+- Oxford comma required: "wolves, coyotes, and mosquitoes"
+- American English spelling (organization, not organisation)
