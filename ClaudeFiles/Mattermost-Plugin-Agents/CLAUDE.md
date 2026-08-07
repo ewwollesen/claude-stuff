@@ -55,7 +55,7 @@ prompts/                    # Prompt templates (*.tmpl files)
 streaming/                  # Response streaming utilities
 websearch/                  # Web search integration
 meetings/                   # Meeting transcription/summary integration
-bifrost/                    # Enterprise agentic features (Bifrost integration)
+bifrost/                    # LLM gateway client — ALL providers route through here
 enterprise/                 # Enterprise license checking
 metrics/                    # Prometheus metrics collection
 evals/                      # Prompt evaluation framework
@@ -87,10 +87,30 @@ Makefile                    # Build system
 ### Key files
 
 - **Provider types**: `llm/service_types.go` — string constants for each provider
-- **Provider registry**: `llm/providers.go` — factory that creates the right client per type
+- **Provider registry**: `llm/providers.go` — table of OpenAI-compatible quirks (fixed base
+  URLs, custom auth transports). Note: `GetOpenAICompatibleProvider` has no non-test callers
+  since the Bifrost migration — do not assume this file affects runtime behavior.
 - **Configuration**: `llm/configuration.go` — `ServiceConfig` (provider connection) and `BotConfig` (bot behavior)
 - **Core interface**: `llm/language_model.go` — `LanguageModel` interface all providers implement
 - **Streaming**: `llm/stream.go`, `llm/stream_generator.go` — streaming response handling
+- **Gateway client**: `bifrost/` — wraps the `maximhq/bifrost` library and implements
+  `llm.LanguageModel` for every provider above. Not enterprise-gated, not agent-specific:
+  `bots.getLLM()` (`bots/bots.go`) builds *all* bot clients via `bifrost.NewFromServiceConfig`.
+  - `bifrost/config.go` — maps service type → provider constant, applies fixed base URLs
+  - `bifrost/bifrost.go` — completions, streaming, tool calls, reasoning/thinking config
+  - `bifrost/embeddings.go` — embedding provider used by `search/embeddings.go`
+  - `bifrost/models.go` — model list fetching for the admin UI (`api/api.go`)
+  - `bifrost/transcription.go` — audio transcription for `meetings/`
+
+**Start here for any provider bug** (auth, base URL, streaming, token limits, tool calls) —
+`bifrost/`, not `llm/providers.go`.
+
+> **Gotcha — Scale AI:** the System Console still offers `scale`
+> (`webapp/src/components/system_console/service.tsx`) and `llm/configuration.go` accepts it,
+> but `bifrost.MapServiceTypeToProvider` has no `scale` case, so bot creation fails with
+> `unsupported service type: scale`. Scale support (#517, Mar 2026) added the registry entry
+> in `llm/providers.go` but was never wired into `bifrost/config.go` after the Bifrost
+> migration (#484, Feb 2026). Re-check `bifrost/config.go` before repeating this to a customer.
 
 ## Conversation Flow
 
@@ -180,7 +200,9 @@ Settings defined in `plugin.json` and managed via `config/`:
 - **License checking**: `enterprise/` — validates enterprise license for premium features
 - **Access control**: Role-based restrictions on bot access
 - **Team restrictions**: Limit AI bots to specific teams
-- **Bifrost**: `bifrost/` — enterprise agentic orchestration features
+
+> `bifrost/` is **not** an enterprise feature — it is the LLM gateway client used by all
+> installations. See [LLM Provider System](#llm-provider-system).
 
 ## Prompt Templates
 
@@ -193,8 +215,10 @@ Settings defined in `plugin.json` and managed via `config/`:
 
 ### "Which LLM providers are supported?"
 1. Check `llm/service_types.go` for provider type constants
-2. Check `llm/providers.go` for the provider factory
-3. Check `plugin.json` for the admin UI configuration schema
+2. Check `bifrost/config.go` (`MapServiceTypeToProvider` / `IsSupported`) for what is
+   *actually* constructible at runtime — this is the authoritative list, not `llm/providers.go`
+3. Check `plugin.json` and `webapp/src/components/system_console/service.tsx` for what the
+   admin UI *offers* — a type can be offered here and still fail at step 2 (see Scale gotcha)
 
 ### "AI bot not responding to messages"
 1. Trace the flow: `server/main.go` (MessageHasBeenPosted hook) → `conversations/handle_messages.go` → `conversations/completion.go`
