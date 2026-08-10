@@ -69,9 +69,19 @@ error you flagged in triage:
   site in the server source.
 - If it maps to **multiple** keys, record all candidates and use the
   `<Where>` prefix and surrounding log context to disambiguate.
-- If it maps to **zero** keys, that itself is a finding: the error may come
-  from a plugin, Enterprise code, or a different version of the server —
-  widen the search to those repos before forming hypotheses.
+- If it maps to **zero** keys, widen in this order before forming hypotheses:
+  1. `~/Repositories/Claude-Repos/Mattermost/webapp/channels/src/i18n/en.json`
+     — same repo, flat key-value JSON. Most likely when the string came from a
+     screenshot, browser console, or the ticket body rather than a server log
+     line.
+  2. `~/Repositories/Claude-Repos/Mattermost-Mobile/assets/base/i18n/en.json`
+     — for strings the customer reported from mobile.
+  3. Plugin repos, or `~/Repositories/Claude-Repos/Enterprise/`.
+  4. Version drift — the string may have changed or been removed since the
+     customer's server version.
+
+  Which catalog the string lands in is itself the finding: it tells you which
+  layer raised the error.
 
 Do this *before* forming hypotheses about what the AppError means. The
 verbatim message + translation key is the anchor; guessing at intent from

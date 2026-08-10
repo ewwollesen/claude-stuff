@@ -94,9 +94,14 @@ independently:
    - One match → record the key alongside the error in your triage output.
    - Multiple matches → record all candidates; disambiguate later using the
      `<Where>` prefix and surrounding context.
-   - Zero matches → that itself is a finding (likely plugin, Enterprise, or
-     version drift); widen the search to those repos before forming
-     hypotheses.
+   - Zero matches → widen in this order before forming hypotheses:
+     (1) `webapp/channels/src/i18n/en.json` in the same repo (flat
+     key-value) — most likely when the string came from a screenshot,
+     browser console, or the ticket body rather than a server log line;
+     (2) `Mattermost-Mobile/assets/base/i18n/en.json` for strings the
+     customer reported from mobile; (3) plugin or Enterprise repos;
+     (4) version drift. Which catalog the string lands in is itself the
+     finding — it tells you which layer raised the error.
 
    Do this in triage, before forming hypotheses about what the AppError
    means — guessing at intent from `<Where>` alone has misled prior
