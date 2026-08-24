@@ -22,13 +22,19 @@ Claude-Stuff/
 │   ├── CLAUDE.md                               # Guide for this directory itself
 │   ├── Mattermost/CLAUDE.md                    # Mattermost server monorepo (Go/React)
 │   ├── Mattermost-Enterprise/CLAUDE.md         # Enterprise features (LDAP, SAML, clustering, etc.)
-│   ├── Desktop/CLAUDE.md                       # Electron desktop app
-│   ├── Mattemrost-Plugin-Calls/CLAUDE.md       # WebRTC voice/video/screensharing plugin
+│   ├── Mattermost-Docs/CLAUDE.md               # Sphinx docs site (docs.mattermost.com)
 │   ├── Mattermost-Mobile/CLAUDE.md             # React Native iOS/Android app
+│   ├── Desktop/CLAUDE.md                       # Electron desktop app
+│   ├── Mattermost-Operator/CLAUDE.md           # Kubernetes operator
+│   ├── Mattermost-RTCD/CLAUDE.md               # WebRTC SFU offload daemon for Calls
 │   ├── Mattermost-Plugin-Agents/CLAUDE.md      # AI/LLM integration plugin
 │   ├── Mattermost-Plugin-Boards/CLAUDE.md      # Kanban boards plugin (Focalboard)
-│   ├── Mattermost-Plugin-Playbooks/CLAUDE.md   # Incident management plugin
-│   └── Mattermost-Operator/CLAUDE.md           # Kubernetes operator
+│   ├── Mattermost-Plugin-Calls/CLAUDE.md       # WebRTC voice/video/screensharing plugin
+│   ├── Mattermost-Plugin-Confluence/CLAUDE.md  # Confluence integration plugin
+│   ├── Mattermost-Plugin-Github/CLAUDE.md      # GitHub integration plugin
+│   ├── Mattermost-Plugin-Gitlab/CLAUDE.md      # GitLab integration plugin
+│   ├── Mattermost-Plugin-LegalHold/CLAUDE.md   # Legal Hold plugin (Enterprise-only)
+│   └── Mattermost-Plugin-Playbooks/CLAUDE.md   # Incident management plugin
 └── Tickets/                                    # Support ticket analysis workspace
     ├── CLAUDE.md                               # Ticket investigation guide
     ├── commands/                               # Slash commands
@@ -48,13 +54,19 @@ Each `ClaudeFiles/` subdirectory maps to a repo in `~/Repositories/Claude-Repos/
 |---|---|---|
 | `Mattermost/` | `Claude-Repos/Mattermost/` | Go/React monorepo — server, webapp, mmctl, API |
 | `Mattermost-Enterprise/` | `Claude-Repos/Enterprise/` | Enterprise features — LDAP, SAML, clustering, compliance |
-| `Desktop/` | `Claude-Repos/Desktop/` | Electron desktop app — multi-server, notifications, certificates |
-| `Mattemrost-Plugin-Calls/` | `Claude-Repos/Mattemrost-Plugin-Calls/` | WebRTC plugin — voice/video calls, recording, transcription |
+| `Mattermost-Docs/` | `Claude-Repos/Mattermost-Docs/` | Sphinx documentation site — docs.mattermost.com source |
 | `Mattermost-Mobile/` | `Claude-Repos/Mattermost-Mobile/` | React Native app — WatermelonDB, dual database, products |
+| `Desktop/` | `Claude-Repos/Desktop/` | Electron desktop app — multi-server, notifications, certificates |
+| `Mattermost-Operator/` | `Claude-Repos/Mattermost-Operator/` | Kubernetes operator — CRDs, controllers, deployment sizing |
+| `Mattermost-RTCD/` | `Claude-Repos/Mattermost-RTCD/` | WebRTC daemon — standalone Go SFU offload service for Calls |
 | `Mattermost-Plugin-Agents/` | `Claude-Repos/Mattermost-Plugin-Agents/` | AI/LLM plugin — multi-provider, MCP, embeddings |
 | `Mattermost-Plugin-Boards/` | `Claude-Repos/Mattermost-Plugin-Boards/` | Kanban boards — boards, blocks, cards, templates |
+| `Mattermost-Plugin-Calls/` | `Claude-Repos/Mattermost-Plugin-Calls/` | WebRTC plugin — voice/video calls, recording, transcription |
+| `Mattermost-Plugin-Confluence/` | `Claude-Repos/Mattermost-Plugin-Confluence/` | Confluence integration — OAuth, subscriptions, Server/Cloud webhooks, Forge bridge |
+| `Mattermost-Plugin-Github/` | `Claude-Repos/Mattermost-Plugin-Github/` | GitHub integration — OAuth, subscriptions, webhooks, permalinks, review-SLA digest |
+| `Mattermost-Plugin-Gitlab/` | `Claude-Repos/Mattermost-Plugin-Gitlab/` | GitLab integration — OAuth, subscriptions, webhooks, permalinks |
+| `Mattermost-Plugin-LegalHold/` | `Claude-Repos/Mattermost-Plugin-LegalHold/` | Legal Hold — Enterprise-only, cluster-scheduled exports, HMAC-hashed archives |
 | `Mattermost-Plugin-Playbooks/` | `Claude-Repos/Mattermost-Plugin-Playbooks/` | Incident management — playbooks, runs, checklists |
-| `Mattermost-Operator/` | `Claude-Repos/Mattermost-Operator/` | Kubernetes operator — CRDs, controllers, deployment sizing |
 
 ## How symlinks work
 
@@ -68,7 +80,7 @@ To keep the symlinks invisible to git in the target repos, two strategies are us
 
 ### Repos where `CLAUDE.md` is NOT tracked upstream
 
-Mattermost, Enterprise, Calls, Boards, Playbooks, Operator — the symlink is an untracked file, so it just needs to be excluded:
+Mattermost, Enterprise, Docs, Operator, RTCD, and the Boards, Calls, Confluence, Github, Gitlab, LegalHold, and Playbooks plugins — the symlink is an untracked file, so it just needs to be excluded:
 
 ```
 # In each repo's .git/info/exclude:
@@ -77,7 +89,7 @@ CLAUDE.md
 
 ### Repos where `CLAUDE.md` IS tracked upstream
 
-Desktop, Mobile, Agents — these repos have their own `CLAUDE.md` committed. Our symlink replaces it, and `skip-worktree` tells git to ignore the change and preserve the symlink during `git pull`:
+Desktop, Mobile, and the Agents plugin — these repos have their own `CLAUDE.md` committed. Our symlink replaces it, and `skip-worktree` tells git to ignore the change and preserve the symlink during `git pull`:
 
 ```bash
 git update-index --skip-worktree CLAUDE.md
