@@ -7,6 +7,11 @@ This guide helps navigate the Mattermost Agents (AI) plugin codebase to answer s
 > - DO NOT make local code changes, create branches, or commit to this repo
 > - Before searching, refresh from remote: `git fetch origin && git pull`
 > - Source of truth for this file: `~/Repositories/Claude-Stuff/ClaudeFiles/Mattermost-Plugin-Agents/CLAUDE.md`
+> - **Verified as of:** upstream `78248541` (2026-08-26). Paths drift fast — confirm a path
+>   still exists before quoting it to a customer.
+> - Upstream tracks its own `CLAUDE.md` (it imports `AGENTS.md`), so this guide lives at
+>   `CLAUDE.local.md` and is git-ignored via `.git/info/exclude`. Never restore it over
+>   `CLAUDE.md` with `git update-index --skip-worktree` — that silently blocks `git pull`.
 
 ## Related Repositories
 
@@ -29,17 +34,21 @@ llm/                        # LLM abstraction layer
 ├── stream.go               # LLM response streaming
 ├── stream_generator.go     # Stream generation utilities
 ├── tools.go                # Tool/function calling definitions
-├── auto_run_tools.go       # Automatic tool execution
 conversations/              # Conversation management
-├── conversations.go        # Conversation lifecycle
+├── conversations.go        # Conversation lifecycle, auto-execute policy
 ├── handle_messages.go      # Message handling and routing
-├── completion.go           # LLM completion orchestration
+├── tool_approval.go        # Tool approval prompts and follow-up completions
+toolrunner/                 # Tool-calling loop and completion orchestration
+├── toolrunner.go           # Run loop, tool execution, max-round limits
 mcp/                        # Model Context Protocol client
 ├── client.go               # MCP client implementation
 ├── client_manager.go       # MCP session and OAuth management
 mcpserver/                  # Embedded MCP server
-├── handlers.go             # MCP server request handlers
-├── tools.go                # MCP tool definitions
+├── plugin_handlers.go      # In-plugin MCP server wiring
+├── http_server.go          # Standalone HTTP MCP server + bearer auth
+├── stdio_server.go         # Standalone stdio MCP server
+├── proxy_tools.go          # Proxying to external MCP servers
+├── tools/                  # MCP tool definitions (one file per resource)
 bots/                       # Bot management
 ├── bots.go                 # Bot user creation and permissions
 config/                     # Plugin configuration management
@@ -120,14 +129,16 @@ Makefile                    # Build system
 2. Plugin hook `MessageHasBeenPosted` fires → `server/main.go`
 3. Message routed to `conversations/handle_messages.go`
 4. Context assembled (thread history, system prompt, tools)
-5. Completion requested: `conversations/completion.go` → `llm/` → provider API
+5. Completion requested: `toolrunner/toolrunner.go` (`Run`) → `llm/` → `bifrost/` → provider API
 6. Response streamed back via SSE → posted as bot message
 7. If tools are called: tool execution → results fed back → follow-up completion
 
 ### Tool calling
 
 - **Tool definitions**: `llm/tools.go` — defines available tools
-- **Auto-execution**: `llm/auto_run_tools.go` — tools that run without user approval
+- **Auto-execution policy**: `conversations/conversations.go` — `shouldAutoExecuteTool()` decides what runs without user approval; `allToolsAutoRunEverywhere()` handles the all-auto case
+- **Approval flow**: `conversations/tool_approval.go` — `HandleToolCall()` / `HandleToolResult()` for tools needing a click
+- **Execution**: `toolrunner/toolrunner.go` — `executeTools()` runs the approved calls
 - **Mattermost tools**: `mmtools/` — Mattermost-specific tools (search, channel info, etc.)
 - **MCP tools**: `mcp/` — tools provided via Model Context Protocol
 
@@ -149,8 +160,9 @@ Makefile                    # Build system
 ### Server side
 
 - **Embedded MCP server**: `mcpserver/` — the plugin itself exposes MCP tools
-- **Handlers**: `mcpserver/handlers.go` — processes incoming MCP requests
-- **Tool definitions**: `mcpserver/tools.go` — tools exposed to MCP clients
+- **Handlers**: `mcpserver/plugin_handlers.go` — `NewPluginMCPHandlers()`, `buildServer()`; standalone modes in `mcpserver/http_server.go` and `mcpserver/stdio_server.go`
+- **Tool definitions**: `mcpserver/tools/` — one file per resource (`posts.go`, `channels.go`, `files.go`, …); `mcpserver/proxy_tools.go` proxies external MCP servers
+- **Note**: `mcpserver/` carries its own `AGENTS.md` and `CLAUDE.md` worth reading before deep dives
 
 ## Embeddings and Semantic Search
 
@@ -221,7 +233,7 @@ Settings defined in `plugin.json` and managed via `config/`:
    admin UI *offers* — a type can be offered here and still fail at step 2 (see Scale gotcha)
 
 ### "AI bot not responding to messages"
-1. Trace the flow: `server/main.go` (MessageHasBeenPosted hook) → `conversations/handle_messages.go` → `conversations/completion.go`
+1. Trace the flow: `server/main.go` (MessageHasBeenPosted hook) → `conversations/handle_messages.go` → `toolrunner/toolrunner.go`
 2. Check bot config: `bots/bots.go` — is the bot enabled and configured?
 3. Check LLM connection: `llm/configuration.go` — API key, URL, model settings
 4. Check permissions: `enterprise/` — is the user/channel allowed?
