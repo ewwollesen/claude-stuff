@@ -159,10 +159,55 @@ Makefile                    # Build system
 
 ### Server side
 
-- **Embedded MCP server**: `mcpserver/` — the plugin itself exposes MCP tools
-- **Handlers**: `mcpserver/plugin_handlers.go` — `NewPluginMCPHandlers()`, `buildServer()`; standalone modes in `mcpserver/http_server.go` and `mcpserver/stdio_server.go`
-- **Tool definitions**: `mcpserver/tools/` — one file per resource (`posts.go`, `channels.go`, `files.go`, …); `mcpserver/proxy_tools.go` proxies external MCP servers
-- **Note**: `mcpserver/` carries its own `AGENTS.md` and `CLAUDE.md` worth reading before deep dives
+The plugin also *exposes* MCP tools. `mcpserver/` has its own `AGENTS.md`
+(imported by its `CLAUDE.md`) — read it before deep dives.
+
+#### Four server variants
+
+| Variant | File | Access mode | Semantic search |
+|---|---|---|---|
+| In-memory (embedded) | `inmemory_server.go` | `remote` | `*search.Search` passed in directly |
+| Plugin handlers | `plugin_handlers.go` | `remote` | HTTP callback |
+| HTTP (standalone) | `http_server.go` | `remote` | HTTP callback |
+| Stdio (standalone) | `stdio_server.go` | **`local`** | HTTP callback |
+
+All four funnel into `registerTools(accessMode, searchService, fileContentService)`
+in `mcpserver/server.go`.
+
+- **Stdio is the only `local` variant.** File-access tools check
+  `accessMode != AccessModeLocal` (`tools/file_utils.go`, `tools/files.go:240`) and
+  refuse otherwise, so file tools work over stdio and not over HTTP. Args fields
+  tagged `access:"local"` are stripped from the schema in remote mode
+  (`NewJSONSchemaForAccessMode`). Modes are defined in `tools/access_mode.go`.
+- **Search takes a network round-trip in every variant except in-memory.**
+  `NewHTTPSemanticSearchService(pluginURL)` POSTs to
+  `<pluginURL>/api/v1/search/raw` (`tools/search_http.go:77`), served by
+  `api/api.go:353` → `api/api_search.go:153` `handleRawSearch`. If `pluginURL` is
+  wrong or unreachable, **search tools fail while every other tool works** — a
+  useful discriminator when only search is broken.
+
+#### Tool definitions and visibility
+
+- **Definitions**: `mcpserver/tools/`, one file per resource (`posts.go`,
+  `channels.go`, `files.go`, …). Registered via per-area `getXTools()` functions
+  aggregated by `mcpTools()` in `tools/provider.go:122`.
+- **Proxying**: `mcpserver/proxy_tools.go` forwards to external MCP servers.
+- **Tools can disappear from `tools/list`.** An `Available func() bool` predicate
+  (`tools/provider.go:73`) is re-evaluated on *every* `tools/list` call, so the
+  tool list is not static across calls. Automation tools are always registered but
+  gated on `isAutomationPluginInstalled()` (`tools/automations.go:24`). A missing
+  automation tool therefore means the gate returned false, not that the tool was
+  never registered.
+- **The automation gate is 404-based, not success-based.** It GETs the automation
+  plugin's `/automations` route and treats *any* status other than 404 as
+  installed — 401 and 403 both count as installed. Only a 404, a malformed
+  request, or a transport error yield false; the latter two log
+  `Automation plugin check failed: bad request` / `: connection error`. So "tool
+  missing" points at a 404 (plugin genuinely absent) or a connection failure,
+  never at an auth problem.
+- **Dev-only tools** (`getDevUserTools`, `getDevPostTools`, `getDevTeamTools`) are
+  appended only when `p.devMode` is set (`tools/provider.go:147`), so they should
+  never appear on a production server.
 
 ## Embeddings and Semantic Search
 
