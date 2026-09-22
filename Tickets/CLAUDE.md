@@ -133,11 +133,21 @@ With a working hypothesis formed from evidence (not assumption):
    - `~/Repositories/Claude-Repos/Mattermost` — server, webapp, mmctl, API
    - `~/Repositories/Claude-Repos/Enterprise` — enterprise features (LDAP, SAML, clustering, etc.)
    - `~/Repositories/Claude-Repos/Mattermost-Plugin-Calls` — Calls plugin
+   - `~/Repositories/Claude-Repos/Mattermost-RTCD` — WebRTC SFU offload daemon for Calls
    - `~/Repositories/Claude-Repos/Mattermost-Plugin-Agents` — AI/LLM plugin
    - `~/Repositories/Claude-Repos/Mattermost-Plugin-Boards` — Boards plugin
    - `~/Repositories/Claude-Repos/Mattermost-Plugin-Playbooks` — Playbooks plugin
+   - `~/Repositories/Claude-Repos/Mattermost-Plugin-Confluence` — Confluence plugin
+   - `~/Repositories/Claude-Repos/Mattermost-Plugin-Github` — GitHub plugin
+   - `~/Repositories/Claude-Repos/Mattermost-Plugin-Gitlab` — GitLab plugin
+   - `~/Repositories/Claude-Repos/Mattermost-Plugin-LegalHold` — Legal Hold plugin
    - `~/Repositories/Claude-Repos/Mattermost-Mobile` — React Native mobile app
    - `~/Repositories/Claude-Repos/Desktop` — Electron desktop app
+   - `~/Repositories/Claude-Repos/Mattermost-Operator` — Kubernetes operator
+   - `~/Repositories/Claude-Repos/Mattermost-Docs` — docs.mattermost.com source
+   Any prepackaged plugin not in this list (jira, servicenow, zoom, mscalendar,
+   msteams-meetings, metrics, channel-export, user-survey, dataminr) has no local
+   clone — reach it with the GitHub MCP connector against `mattermost/<repo>`.
    See each repo's `CLAUDE.md` for structure and conventions.
    **Before searching, refresh from remote:** `cd <repo> && git fetch origin && git pull`
 2. Check for known GitHub issues or PRs related to the error using the GitHub
@@ -160,6 +170,15 @@ field or a filename, for example, is a class of bug that won't show up in
 any server log or config but is fixable in the webapp in one line. This
 heuristic was added after ticket 51286 closed with a first-pass miss along
 exactly these lines.
+
+The same reasoning applies one layer out: the page a user loads is the core
+webapp **plus one bundle per prepackaged plugin**, each built from its own
+`node_modules`, so "not in the webapp source" is not the same as "not in
+Mattermost." For CVE, scanner and dependency findings — and for any
+browser-layer symptom the core webapp doesn't explain — work the plugin-bundle
+checklist in `commands/mm_ticket_command.md`: plugin list from
+`PLUGIN_PACKAGES` at the customer's version tag, each plugin checked at its
+pinned tag, runtime vs. build-time dependencies, and webpack `externals`.
 
 ### Step 5 — Update analysis.md
 

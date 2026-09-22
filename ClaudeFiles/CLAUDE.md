@@ -48,5 +48,6 @@ Most support issues span multiple repos. Common patterns:
 
 - **Enterprise feature not working**: Check license in `Mattermost/` (`server/public/model/license.go`), config in `Mattermost/` (`server/public/model/config.go`), implementation in `Mattermost-Enterprise/`
 - **Plugin issue**: Check plugin code in its repo, then trace the plugin API call back to `Mattermost/` (`server/public/plugin/api.go`)
+- **Browser-side symptom the core webapp doesn't explain** (CVE or scanner finding, unexpected served asset, console error): the loaded page is `Mattermost/` `webapp/` **plus one bundle per prepackaged plugin**, each built from its own `node_modules` and served from the same origin. Get the release's plugin list from `PLUGIN_PACKAGES` in `Mattermost/` `server/Makefile` **at the customer's version tag**, then check the owning plugin repo **at its pinned tag**. A dependency fix in `Mattermost/` `webapp/` does not fix the plugin bundles
 - **Mobile/Desktop issue**: Check client code in the respective repo, then trace the API call or WebSocket event back to `Mattermost/`
 - **Error message lookup**: Find the translation ID in `Mattermost/` (`server/i18n/en.json`), then grep for where it's raised

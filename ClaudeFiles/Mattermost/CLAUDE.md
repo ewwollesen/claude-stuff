@@ -334,6 +334,40 @@ Defined in `server/public/plugin/hooks.go`:
 - No way to follow/unfollow threads on behalf of users
 - Cannot call app-layer functions directly — all interaction is via the RPC plugin API interface
 
+## Prepackaged Plugins and Webapp Bundles
+
+A release ships more browser code than `webapp/`. The plugins bundled into the
+release are listed in `server/Makefile` under `PLUGIN_PACKAGES` (~line 161), one
+pinned `name-vX.Y.Z` entry each — that tag is what the customer actually runs:
+
+```bash
+git show v<version>:server/Makefile | grep PLUGIN_PACKAGES
+```
+
+Read that list at the customer's tag, not at `master`; the versions move between
+releases. `FIPS_ENABLED=true` **replaces** the list wholesale with a three-plugin
+FIPS subset (playbooks, agents, boards), so a FIPS build prepackages no calls,
+github, jira, etc.
+
+Each plugin builds its own `webapp/` bundle from its own `node_modules`, and the
+server serves it from the same origin as the core webapp at
+`/static/<plugin-id>/<plugin-id>_<hash>_bundle.js` — assembled in
+`server/public/model/manifest.go:269`, where the hash is the FNV-1a hash of the
+bundle. What follows from that:
+
+- A dependency fixed in `webapp/package.json` here is **not** fixed in the plugin
+  bundles. Separate builds, separate lockfiles, separate repos.
+- Whether a plugin fix reaches a customer is two questions: "fixed in plugin
+  vX.Y.Z" and "which Mattermost version bumped `PLUGIN_PACKAGES` to it." The
+  second can be "none yet," in which case upgrading does not help.
+- `GET /api/v4/plugins/webapp` enumerates the bundles a running server actually
+  serves (`.[].webapp.bundle_path`).
+
+Makefile line number and FIPS subset verified against upstream `dc8e580fa5`
+(2026-09-22). For the full investigation checklist — runtime vs. build-time deps,
+webpack `externals`, tree-shaking caveats, which plugins have no local repo — see
+`~/Repositories/Claude-Stuff/Tickets/commands/mm_ticket_command.md`.
+
 ## Email System
 
 - **Mail package**: `server/platform/shared/mail/mail.go` — constructs and sends emails via SMTP
@@ -420,3 +454,9 @@ Defined in `server/public/plugin/hooks.go`:
 1. Check `IsTeamEmailAllowed()` in `server/channels/app/teams/utils.go` — bots are exempted
 2. But `CreateUserWithInviteId` in `user.go` calls `CheckUserDomain()` directly with NO bot exemption
 3. Verify the account is actually a bot (`is_bot: true`) vs a regular user account used like a bot
+
+### "Is this browser-side finding really in the core webapp?"
+1. Search `webapp/` first — but do not stop there. The loaded page is the core webapp plus one bundle per prepackaged plugin
+2. Get the plugin list for the customer's exact tag: `git show v<version>:server/Makefile | grep PLUGIN_PACKAGES`
+3. Map the flagged URL to a bundle: `GET /api/v4/plugins/webapp` → `.[].webapp.bundle_path`
+4. Check the owning plugin repo **at its pinned tag** — a fix on the plugin's `main` doesn't reach anyone until `PLUGIN_PACKAGES` bumps to a release containing it

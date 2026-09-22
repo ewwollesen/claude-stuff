@@ -125,7 +125,8 @@ Before concluding that a fix shipped:
   `~/Repositories/Claude-Repos/` covers calls, playbooks, boards, agents,
   github, gitlab, confluence and legalhold. For the others in
   `PLUGIN_PACKAGES` (jira, servicenow, zoom, mscalendar, msteams-meetings,
-  metrics, channel-export, user-survey), use the GitHub MCP connector against
+  metrics, channel-export, user-survey, dataminr), use the GitHub MCP connector
+  against
   `mattermost/<plugin-repo>`.
 
 For any scanner-sourced finding, establish two things before analyzing:
