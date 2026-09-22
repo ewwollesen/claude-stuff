@@ -87,6 +87,60 @@ Do this *before* forming hypotheses about what the AppError means. The
 verbatim message + translation key is the anchor; guessing at intent from
 `<Where>` alone has misled prior investigations.
 
+**Vulnerability and dependency findings: search the plugin repos, not just the
+server repo.** A CVE or scanner finding reported against a Mattermost version
+is not answered by `~/Repositories/Claude-Repos/Mattermost` alone. Every
+prepackaged plugin ships its own `webapp` bundle built from its own
+`node_modules`, served from the same origin as the core webapp — so the server
+dependency can be patched while the plugins keep serving the vulnerable copy.
+Before concluding that a fix shipped:
+
+- **Get the plugin list from the customer's exact version tag**, not from
+  `master`:
+  `git show v<version>:server/Makefile | grep PLUGIN_PACKAGES`
+  That is the authoritative list of what the release actually bundles.
+- **Check each plugin at its pinned tag**, not its default branch. A fix on
+  `main` that hasn't been released — or that has been released but not yet
+  picked up by a `PLUGIN_PACKAGES` bump — does not reach the customer. Report
+  both facts separately: "fixed in plugin vX.Y.Z" and "first Mattermost
+  version that prepackages it." If the answer to the second is "none yet," say
+  so; upgrading won't clear the finding.
+- **Distinguish runtime from build-time.** In the plugin's
+  `webapp/package-lock.json`, an entry with `"dev": true` is reachable only
+  from devDependencies and never reaches the browser. Only runtime dependents
+  matter for a client-side finding. "Present in the lockfile" and "served to
+  users" are different claims — state which one you mean.
+- **Check `webapp/webpack.config.js` `externals`.** Plugins externalize react,
+  redux, react-intl and similar so they reuse the host webapp's copy. Anything
+  *not* in that list is compiled into the plugin bundle and served at
+  `/static/<plugin-id>/<plugin-id>_<hash>_bundle.js`
+  (`server/public/model/manifest.go`).
+- **CommonJS dependencies are not tree-shaken.** `import {debounce} from
+  'lodash'` still bundles the entire library, version string included. That
+  string is what external fingerprinting scanners detect, so "we only call one
+  safe function" does not clear the finding. Reachability is worth analyzing,
+  but report it as a separate, weaker claim — and only after checking the
+  plugin's transitive runtime deps, not just its own source.
+- **Not every prepackaged plugin has a local repo.**
+  `~/Repositories/Claude-Repos/` covers calls, playbooks, boards, agents,
+  github, gitlab, confluence and legalhold. For the others in
+  `PLUGIN_PACKAGES` (jira, servicenow, zoom, mscalendar, msteams-meetings,
+  metrics, channel-export, user-survey), use the GitHub MCP connector against
+  `mattermost/<plugin-repo>`.
+
+For any scanner-sourced finding, establish two things before analyzing:
+whether the customer is actually running the version they believe they are,
+and **which asset** was flagged —
+`curl -s https://<server>/api/v4/plugins/webapp | jq -r '.[].webapp.bundle_path'`
+enumerates the plugin bundles to check against the scanner's URL.
+
+More generally, this applies to any browser-layer question, not just CVEs:
+the page a user loads is core webapp plus N plugin bundles. When the core
+webapp source doesn't explain the reported behavior, the plugin bundles are
+the next place to look, not the last. This heuristic was added after a
+ticket where the core webapp lodash bump landed correctly in 11.7.11 but the
+prepackaged playbooks and boards bundles kept serving the vulnerable version.
+
 Then follow the workflow defined in CLAUDE.md exactly:
 
 0. **Before any analysis**, list every file in the current directory (recursively). Attempt to read or access each artifact. If ANY file cannot be read or parsed (PDFs, images, compressed archives, unknown formats, etc.), STOP IMMEDIATELY and report which files are inaccessible and why. Do not proceed with analysis until all artifacts can be accessed — incomplete input leads to wasted work.
